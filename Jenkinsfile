@@ -46,6 +46,26 @@ pipeline {
           }
         }
       }
+      stage("Delete Docker Images") {
+        steps {
+          script {
+            sh "docker image remove ${IMAGE_NAME}:${IMAGE_TAG}"
+            sh "docker image remove ${IMAGE_NAME}:latest"
+          }
+        }
+      }
+
+      stage("Update kubernetes deployment file") {
+        steps {
+          script {
+            sh """
+             cat deployment.yml
+             sed -i '/s${APP_NAME}.*/${APPNAME}:${IMAGE_TAG}/G' deployment.yml
+             cat deployment.yml
+            """
+          }
+        }
+      }
 
       
     }
