@@ -13,6 +13,6 @@ spec:
     spec:
       containers:
       - name: flask-app-deployment
-        image: mert5432100/gitops-argo-app:142
+        image: mert5432100/gitops-argo-app:143
         ports:
         - containerPort: 5000
