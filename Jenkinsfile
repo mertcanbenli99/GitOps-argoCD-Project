@@ -29,11 +29,24 @@ pipeline {
 
         }
       }
+      stage("Docker Image Build") {
+        steps {
+          script {
+            docker_image = docker.build "${IMAGE_NAME}"
+          }
+        }
+      }
+      stage("Push Docker Image to Hub") {
+        steps {
+          script {
+            docker.withRegistry('', REGISTRY_CREDS) {
+              docker_image.push("${BUILD_NUMBER}")
+              docker_image.push("latest")
+            }
+          }
+        }
+      }
 
       
     }
 }
-
-
-// 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 github
-//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
