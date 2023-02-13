@@ -60,13 +60,28 @@ pipeline {
           script {
             sh """
              cat deployment.yml
-             sed -i '/s${APP_NAME}.*/${APPNAME}:${IMAGE_TAG}/G' deployment.yml
+             sed -i 's/${APP_NAME}.*/${APP_NAME}:${IMAGE_TAG}/g' deployment.yml
              cat deployment.yml
             """
           }
         }
       }
 
-      
+      stage("Push updated deployment file to git") {
+        steps {
+          script {
+            sh """
+            git config --global user.name "Mert Can Benli"
+            git config --global user.email "mertcanbenli99@outlook.com"
+            git add deployment.yml
+            git commit -m 'update the deployment file'
+             
+            """
+withCredentials([gitUsernamePassword(credentialsId: 'github', gitToolName: 'Default')]) {
+    sh "git push -u origin main"
+}
+          }
+        }
+      }
     }
 }
